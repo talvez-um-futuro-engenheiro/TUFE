@@ -4,59 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TUFE</title>
-
     <style>
-        * {
+        body{
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
             min-height: 100vh;
+
+            background-image: url("fundo.png");
+            background-size: cover;      /* cobre toda a tela */
+            background-position: center; /* centraliza */
+            background-repeat: no-repeat; 
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #f5f7fa, #353e57);
-            padding: 20px;
-            text-align: center;
+            /*background: #222;*/
             font-family: Arial, sans-serif;
         }
-
-        .container {
-            max-width: 90%;
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 25px;
+            border-radius: 20px;
         }
 
-        .titulo {
-            font-size: clamp(2rem, 8vw, 4rem);
-            color: #222;
-            margin-bottom: 20px;
-            line-height: 1.2;
+        .botao {
+            display: block;
+            padding: 12px 30px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.35); /* 35% de opacidade */
+            border: 2px solid white;
+            border-radius: 15px;
+            font-size: 18px;
+            transition: 0.2s;
+            width: 300px;
         }
 
-        .subtitulo {
-            font-size: clamp(1rem, 3vw, 1.4rem);
-            color: #444;
-        }
-
-        @media (max-width: 480px) {
-            .titulo {
-                font-size: 2rem;
-            }
-
-            .subtitulo {
-                font-size: 1rem;
-            }
+        .botao:hover {
+            background-color: rgba(255, 255, 255, 0.15);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="titulo">🚧 UNDER CONSTRUCTION 🚧</h1>
-        <p class="subtitulo">
-            O site está em desenvolvimento.<br>
-            Volte em breve!
-        </p>
-    </div>
+    <div class="menu">
+    <a href="jogo_em_c.html" class="botao">jogo em c</a>
+</div>
 </body>
 </html>

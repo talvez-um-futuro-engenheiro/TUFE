@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo em C (Adaptado)</title>
+<style>
+body{
+    margin:0;background:#111;color:#fff;
+    font-family:monospace;
+    display:flex;justify-content:center;align-items:center;
+    min-height:100vh;
+}
+#container{
+    background:#000;border:2px solid #888;border-radius:10px;
+    padding:15px;max-width:1100px;
+}
+#game{
+    white-space:pre;
+    line-height:1;
+    font-size:14px;
+    overflow:auto;
+}
+#info{margin-bottom:10px}
+</style>
+</head>
+<body>
+<div id="container">
+<div id="info">
+<b>Jogo em C (adaptado para Web)</b><br>
+Controles: Setas ou WASD. H = ajuda.<br>
+Colete 9 moedas ($), evite bombas (*), pegue a chave (+) e abra a porta (:).
+</div>
+<pre id="game"></pre>
+</div>
+
+<script>
+const mapaTexto = [
+"####################################################################################################",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           :                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"#                                                           #                                      #",
+"####################################################################################################"
+];
+
+let mapa = mapaTexto.map(r=>r.split(""));
+let xp=2, yp=2, vida=9, coins=0, chave=0;
+let mostrandoMsg=null;
+
+function aleatorio(ch){
+ let c=0;
+ while(c<1){
+  let y=Math.floor(Math.random()*16)+3;
+  let x=Math.floor(Math.random()*47)+2;
+  if(mapa[y][x]===' '){ mapa[y][x]=ch; c++; }
+ }
+}
+for(let i=0;i<9;i++){
+ let ok=false;
+ while(!ok){
+  let y=Math.floor(Math.random()*16)+3;
+  let x=Math.floor(Math.random()*47)+2;
+  if(mapa[y][x]===' '){ mapa[y][x]='$'; ok=true; }
+ }
+}
+for(let i=0;i<9;i++){
+ let ok=false;
+ while(!ok){
+  let y=Math.floor(Math.random()*16)+3;
+  let x=Math.floor(Math.random()*47)+2;
+  if(mapa[y][x]===' '){ mapa[y][x]='*'; ok=true; }
+ }
+}
+aleatorio('+');
+
+function render(){
+ let temp=mapa.map(r=>[...r]);
+ temp[yp][xp]='@';
+ let txt=`VIDA:${vida}  MOEDAS:${coins}/9  CHAVES:${chave}\n`;
+ txt+=temp.map(r=>r.join("")).join("\n");
+ if(mostrandoMsg){
+   txt+="\n\n"+mostrandoMsg+"\nPressione Q para fechar.";
+ }
+ document.getElementById("game").textContent=txt;
+}
+
+function mensagem(t){
+ mostrandoMsg=t;
+ render();
+}
+
+document.addEventListener("keydown",e=>{
+ if(mostrandoMsg){
+   if(e.key.toLowerCase()==='q'){mostrandoMsg=null; render();}
+   return;
+ }
+
+ if(e.key.toLowerCase()==='h'){
+  mensagem("Use as setas ou WASD. Colete moedas ($), evite bombas (*), pegue a chave (+) para abrir a porta (:).");
+  return;
+ }
+
+ let nx=xp, ny=yp;
+ if(e.key==="ArrowUp"||e.key==="w") ny--;
+ if(e.key==="ArrowDown"||e.key==="s") ny++;
+ if(e.key==="ArrowLeft"||e.key==="a") nx--;
+ if(e.key==="ArrowRight"||e.key==="d") nx++;
+
+ if(nx===xp && ny===yp) return;
+ if(ny<0||ny>=mapa.length||nx<0||nx>=mapa[0].length) return;
+
+ let bloco=mapa[ny][nx];
+ if(bloco==='#') return;
+
+ if(bloco===':'){
+   if(chave>0){ chave--; mapa[ny][nx]=' '; }
+   else { mensagem("Você precisa de uma chave para abrir esta porta."); return; }
+ }
+
+ xp=nx; yp=ny;
+
+ if(mapa[yp][xp]==='$'){ coins++; mapa[yp][xp]=' '; }
+ if(mapa[yp][xp]==='*'){ vida--; mapa[yp][xp]=' '; }
+ if(mapa[yp][xp]==='+'){ chave++; mapa[yp][xp]=' '; }
+
+ if(coins>=9){
+   mensagem("VICTORY!");
+ }
+ if(vida<=0){
+   mensagem("GAME OVER");
+ }
+
+ render();
+});
+
+render();
+</script>
+</body>
+</html>
